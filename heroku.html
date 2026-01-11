@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy WOLFBOT to Heroku</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00ff00;
+            --secondary: #004d00;
+            --bg: #000000;
+            --glass: rgba(0, 255, 0, 0.03);
+            --text: #ffffff;
+            --muted: #00aa00;
+            --highlight: #00ff00;
+            --radius: 16px;
+            --blur: 12px;
+            --transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --glow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated green dots background */
+        .bg-dots {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .dot {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(100px, -50px); }
+            50% { transform: translate(-50px, 100px); }
+            75% { transform: translate(-100px, -30px); }
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(var(--blur));
+            border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .back-button {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid var(--highlight);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .deploy-container {
+            background: rgba(0, 255, 0, 0.05);
+            backdrop-filter: blur(var(--blur));
+            border-radius: var(--radius);
+            padding: 3rem;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .deploy-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 255, 0, 0.2);
+            border-color: rgba(0, 255, 0, 0.3);
+        }
+
+        .deploy-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 0, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .deploy-container:hover::before {
+            opacity: 0.5;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .github-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 255, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .github-card:hover {
+            border-color: rgba(0, 255, 0, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+        }
+
+        .github-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .github-header i {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .github-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .deploy-button {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid var(--highlight);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            transition: var(--transition);
+            margin-top: 1.5rem;
+        }
+
+        .deploy-button:hover {
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .deploy-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .info-note {
+            background: rgba(0, 255, 0, 0.05);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .info-note ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .info-note li {
+            margin-bottom: 0.5rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .loading span {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 1.5rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            .deploy-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .deploy-container {
+                padding: 1.5rem;
+            }
+
+            .github-card {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .github-header h2 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated green dots background -->
+    <div class="bg-dots" id="bgDots"></div>
+    
+    <header>
+        <div class="logo">WOLFBOT</div>
+        <a href="/" class="back-button">
+            <i class="fas fa-arrow-left"></i> BACK
+        </a>
+    </header>
+
+    <main>
+        <div class="deploy-container">
+            <h1>Deploy WOLFBOT to Heroku</h1>
+            <p class="subtitle">Enter your GitHub username to start the deployment process</p>
+            
+            <div class="github-card">
+                <div class="github-header">
+                    <i class="fab fa-github"></i>
+                    <h2>GitHub Information Required</h2>
+                </div>
+                
+                <p>To deploy WOLFBOT to Heroku, we need your GitHub username. This allows Heroku to:</p>
+                
+                <div class="form-group">
+                    <label for="githubUsername">Your GitHub Username</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" 
+                               id="githubUsername" 
+                               placeholder="Enter your GitHub username"
+                               autocomplete="off"
+                               autocorrect="off"
+                               autocapitalize="off"
+                               spellcheck="false">
+                    </div>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <span><i class="fas fa-spinner fa-spin"></i> Preparing deployment link...</span>
+                </div>
+                
+                <button class="deploy-button" onclick="startDeployment()">
+                    <i class="fas fa-rocket"></i> DEPLOY TO HEROKU
+                </button>
+            </div>
+            
+            <div class="info-note">
+                <p><strong>Why do we need your GitHub username?</strong></p>
+                <ul>
+                    <li>To create a personalized deployment link</li>
+                    <li>To fork the repository to your account automatically</li>
+                    <li>To set up environment variables correctly</li>
+                    <li>To ensure a smooth deployment process</li>
+                </ul>
+                <p style="margin-top: 1rem; font-size: 0.85rem;">
+                    <i class="fas fa-shield-alt"></i> Your username is only used for deployment and is not stored.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Create animated green dots
+        function createFloatingDots() {
+            const container = document.getElementById('bgDots');
+            const dotCount = 150;
+            
+            for (let i = 0; i < dotCount; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const size = Math.random() * 4 + 2;
+                const duration = Math.random() * 20 + 20;
+                const delay = Math.random() * 5;
+                
+                dot.style.left = `${x}%`;
+                dot.style.top = `${y}%`;
+                dot.style.width = `${size}px`;
+                dot.style.height = `${size}px`;
+                dot.style.animation = `float ${duration}s infinite ${delay}s`;
+                dot.style.opacity = Math.random() * 0.4 + 0.2;
+                
+                container.appendChild(dot);
+            }
+        }
+
+        // Smooth page load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+            
+            createFloatingDots();
+            
+            // Focus on input field
+            document.getElementById('githubUsername').focus();
+            
+            // Allow Enter key to trigger deployment
+            document.getElementById('githubUsername').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    startDeployment();
+                }
+            });
+        });
+
+        // Deployment function
+        function startDeployment() {
+            const username = document.getElementById('githubUsername').value.trim();
+            const button = document.querySelector('.deploy-button');
+            const loading = document.getElementById('loading');
+            
+            if (!username) {
+                alert('Please enter your GitHub username');
+                document.getElementById('githubUsername').focus();
+                return;
+            }
+            
+            // Basic validation
+            if (!/^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/.test(username)) {
+                alert('Please enter a valid GitHub username');
+                return;
+            }
+            
+            // Show loading
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING...';
+            loading.style.display = 'block';
+            
+            // Simulate processing (in real implementation, this would call your backend)
+            setTimeout(() => {
+                // This would normally redirect to Heroku deployment URL
+                // For now, we'll show a message
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-rocket"></i> DEPLOY TO HEROKU';
+                loading.style.display = 'none';
+                
+                // In a real implementation, you would redirect to Heroku:
+                // window.location.href = `https://heroku.com/deploy?template=https://github.com/777Wolf-dot/Silent-Wolf--Bot&user=${username}`;
+                
+                // For demo purposes, show what would happen:
+                const deployUrl = `https://heroku.com/deploy?template=https://github.com/777Wolf-dot/Silent-Wolf--Bot&user=${username}`;
+                
+                const result = confirm(`Ready to deploy!\n\nGitHub User: ${username}\n\nClick OK to proceed to Heroku deployment page.`);
+                if (result) {
+                    // This is where you would actually redirect
+                    alert(`In production, this would redirect to:\n${deployUrl}\n\nFor now, please use the direct Heroku deploy button in the repository.`);
+                    // Uncomment this line for actual deployment:
+                    // window.open(deployUrl, '_blank');
+                }
+            }, 1500);
+        }
+
+        // Auto-suggest based on common patterns (optional)
+        document.getElementById('githubUsername').addEventListener('input', function(e) {
+            const value = e.target.value;
+            if (value.length > 0) {
+                // You could add auto-suggest logic here
+            }
+        });
+    </script>
+</body>
+</html>

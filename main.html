@@ -1,9 +1,11 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Digitex Xmd Bot" />
-  <title>WOLFBOT SESSION</title>
+  <meta name="description" content="WOLFBOT SESSION - Advanced Digital Trading Assistant" />
+
+  <title>WOLFBOT</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <style>
@@ -37,6 +39,14 @@
       line-height: 1.6;
       overflow-x: hidden;
       position: relative;
+    }
+     .logo-img {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(0, 255, 0, 0.3);
+      box-shadow: var(--glow);
     }
 
     /* Animated green dots background */
@@ -87,6 +97,21 @@
       position: sticky;
       top: 0;
       z-index: 100;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-image {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
     }
 
     .logo {
@@ -368,7 +393,10 @@
   <div class="bg-dots" id="bgDots"></div>
   
   <header>
-    <div class="logo">WOLFBOT</div>
+    <div class="logo-container">
+      <img src="https://i.ibb.co/39KMtVFZ/403aea2930de.jpg" alt="WOLFBOT Logo" class="logo-image" />
+      <div class="logo">WOLFBOT</div>
+    </div>
     <div class="status">
       <div class="status-item"><i class="fas fa-bolt"></i> <span id="battery">--%</span></div>
       <div class="status-item"><i class="fas fa-wifi"></i> <span id="ip">Loading...</span></div>
@@ -392,10 +420,10 @@
         <h3>Open WOLFBOT Repo</h3>
         <p class="muted">Bot Repo</p>
       </div>
-      <div class="tool" onclick="window.location.href='https://developerdave.com'">
-        <i class="fab fa-page"></i>
-        <h3>Support Owner WOLFBOT Host Website Page by using</h3>
-        <p class="muted">Host Website</p>
+      <div class="tool" onclick="window.location.href='/heroku'">
+        <i class="fas fa-rocket"></i>
+        <h3>DEPLOY TO HEROKU</h3>
+        <p class="muted">Deploy WOLFBOT to Heroku Cloud</p>
       </div>
       <div class="tool" onclick="window.location.href='https://wa.me/254104260236?text=hellow sir'">
         <i class="fas fa-headset"></i>
@@ -418,7 +446,7 @@
       <div class="track">
         <div>
           <strong>WOLFBOT Song</strong>
-          <div class="muted">Dev GIFTED DEV</div>
+          <div class="muted">Silent Wolf</div>
         </div>
         <div class="controls">
           <button onclick="togglePlay('audio1')"><i class="fas fa-play"></i> PLAY</button>
@@ -478,7 +506,7 @@
       const update = () => {
         const now = new Date();
         const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
-        document.title = `WOLFBOT XMD MD | ${timeStr}`;
+        document.title = `WOLFBOT SESSION | ${timeStr}`;
       };
       update();
       setInterval(update, 1000);
