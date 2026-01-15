@@ -368,6 +368,17 @@
   </header>
 
   <div class="main-content">
+    <div class="music-player">
+      <h3>PLAY NOW</h3>
+      <div class="music-title">Home</div>
+      <div class="music-subtitle">by NF</div>
+      <button class="play-btn" onclick="togglePlay()">
+        <i class="fas fa-play" id="play-icon"></i>
+      </button>
+      <div class="time-display" id="time1">0:00</div>
+      <div class="music-subtitle">Wolf Spirits</div>
+      <audio id="audio1" src="https://files.catbox.moe/c2ec5n.mp3" loop></audio>
+    </div>
     <div class="box">
       <h2>PAIRING CODE</h2>
       <h5>WOLFBOT</h5>
@@ -385,17 +396,7 @@
       <button id="copy-code" onclick="copyCode()">COPY YOUR CODE</button>
     </div>
 
-    <div class="music-player">
-      <h3>PLAY NOW</h3>
-      <div class="music-title">WOLFBOT Song</div>
-      <div class="music-subtitle">by Dev WOLFBOT Enjoy</div>
-      <button class="play-btn" onclick="togglePlay()">
-        <i class="fas fa-play" id="play-icon"></i>
-      </button>
-      <div class="time-display" id="time1">0:00</div>
-      <div class="music-subtitle">jah bless you</div>
-      <audio id="audio1" src="https://files.catbox.moe/wdap4t.mp3" loop></audio>
-    </div>
+    
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
