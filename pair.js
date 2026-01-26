@@ -65,28 +65,14 @@ router.get('/', async (req, res) => {
                     );
 
                     let Mbuvi_MD_TEXT = `
-        
-╔════════════════════◇
-║『 SESSION CONNECTED』
-║ 🔷 WOLFBBOT
-║ 🔷 By Silent Wolf
-╚════════════════════╝
-
-
----
-
-╔════════════════════◇
-║『 You've chosen WOLFBOT』
-║ -Set the session ID in Heroku:
-║ - SESSION_ID: 
-╚════════════════════╝
-╔════════════════════◇
-║web:
-╚═════════════════════╝
-𒂀 WOLFBOT
----
-Don't Forget To Give Star⭐ To My Repo
-______________________________`;
+╭─⊷『 SESSION CONNECTED 』
+│
+├─⊷ *🐺 WOLFBOT*
+│  ├─⊷ *Name:* WOLFBOT
+│  ├─⊷ *By:* Silent Wolf
+│  └─⊷ *Status:* ✅ Connected
+╰─⊷ 
+`;
 
                                         await Pair_Code_By_Mbuvi_Tech.sendMessage(Pair_Code_By_Mbuvi_Tech.user.id, { text: Mbuvi_MD_TEXT }, { quoted: session });
 
