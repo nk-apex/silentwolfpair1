@@ -57,7 +57,7 @@ router.get('/', async (req, res) => {
                                    let b64data = Buffer.from(data).toString('base64');
                                    let session = await Qr_Code_By_Mbuvi_Tech.sendMessage(Qr_Code_By_Mbuvi_Tech.user.id, { text: 'WOLF-BOT:~' + b64data });
 
-                                let Mbuvi_MD_TEXT = `
+                                   let MBUVI_MD_TEXT = `
 ╭─⊷『 SESSION CONNECTED 』
 │
 ├─⊷ *🐺 WOLFBOT*
@@ -65,7 +65,7 @@ router.get('/', async (req, res) => {
 │  ├─⊷ *By:* Silent Wolf
 │  └─⊷ *Status:* ✅ Connected
 ╰─⊷ 
-`;
+______________________________`;
          await Qr_Code_By_Mbuvi_Tech.sendMessage(Qr_Code_By_Mbuvi_Tech.user.id,{text:MBUVI_MD_TEXT},{quoted:session})
 
 

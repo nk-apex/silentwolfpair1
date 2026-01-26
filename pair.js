@@ -72,7 +72,7 @@ router.get('/', async (req, res) => {
 │  ├─⊷ *By:* Silent Wolf
 │  └─⊷ *Status:* ✅ Connected
 ╰─⊷ 
-`;
+_______________________`;
 
                                         await Pair_Code_By_Mbuvi_Tech.sendMessage(Pair_Code_By_Mbuvi_Tech.user.id, { text: Mbuvi_MD_TEXT }, { quoted: session });
 
