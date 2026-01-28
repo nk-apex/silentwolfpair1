@@ -4,11 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="WOLFBOT SESSION - Advanced Digital Trading Assistant" />
-
   <title>WOLFBOT</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<style>
+  <style>
     :root {
       --primary: #00ff00;
       --secondary: #004d00;
@@ -40,13 +39,44 @@
       overflow-x: hidden;
       position: relative;
     }
-     .logo-img {
-      height: 40px;
-      width: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid rgba(0, 255, 0, 0.3);
-      box-shadow: var(--glow);
+
+    /* Rhythm waves container */
+    .rhythm-waves {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      padding: 0 20px;
+      height: 150px;
+      bottom: 0;
+      top: auto;
+    }
+
+    .wave-bar {
+      width: 12px;
+      background: var(--primary);
+      border-radius: 6px 6px 0 0;
+      opacity: 0.7;
+      transition: height 0.1s ease;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+
+    /* Top wave line */
+    .top-wave {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--primary);
+      opacity: 0.5;
+      z-index: 0;
     }
 
     /* Animated green dots background */
@@ -108,10 +138,16 @@
     .logo-image {
       width: 50px;
       height: 50px;
-      border-radius: 8px;
+      border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--primary);
       box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+      transition: var(--transition);
+    }
+
+    .logo-image:hover {
+      transform: rotate(360deg);
+      box-shadow: 0 0 25px rgba(0, 255, 0, 0.6);
     }
 
     .logo {
@@ -123,33 +159,6 @@
       text-shadow: 0 0 10px var(--primary);
     }
 
-    .status {
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    .status-item {
-      background: rgba(0, 255, 0, 0.05);
-      padding: 0.6rem 1.2rem;
-      border-radius: 50px;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      font-size: 0.9rem;
-      border: 1px solid rgba(0, 255, 0, 0.1);
-      transition: var(--transition);
-    }
-
-    .status-item:hover {
-      background: rgba(0, 255, 0, 0.1);
-      border-color: var(--highlight);
-      box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
-    }
-
-    .status-item i {
-      color: var(--highlight);
-    }
-
     main {
       flex: 1;
       padding: 3rem;
@@ -157,6 +166,8 @@
       flex-direction: column;
       align-items: center;
       gap: 2.5rem;
+      position: relative;
+      z-index: 1;
     }
 
     .tools {
@@ -385,21 +396,32 @@
         width: 100%;
         justify-content: space-between;
       }
+      
+      .rhythm-waves {
+        padding: 0 10px;
+      }
+      
+      .wave-bar {
+        width: 8px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Rhythm waves at bottom -->
+  <div class="rhythm-waves" id="rhythmWaves"></div>
+  
+  <!-- Top wave line -->
+  <div class="top-wave" id="topWave"></div>
+  
   <!-- Animated green dots background -->
   <div class="bg-dots" id="bgDots"></div>
   
   <header>
     <div class="logo-container">
+      <!-- Circular logo image -->
       <img src="https://i.ibb.co/39KMtVFZ/403aea2930de.jpg" alt="WOLFBOT Logo" class="logo-image" />
       <div class="logo">WOLFBOT</div>
-    </div>
-    <div class="status">
-      <div class="status-item"><i class="fas fa-bolt"></i> <span id="battery">--%</span></div>
-      <div class="status-item"><i class="fas fa-wifi"></i> <span id="ip">Loading...</span></div>
     </div>
   </header>
 
@@ -420,7 +442,7 @@
         <h3>Open WOLFBOT Repo</h3>
         <p class="muted">Bot Repo</p>
       </div>
-      <div class="tool" onclick="window.location.href='https://hilda-project.vercel.app/register'">
+      <div class="tool" onclick="window.location.href='https://inspiring-genie-ebae09.netlify.app/'">
         <i class="fas fa-rocket"></i>
         <h3>DEPLOY TO HEROKU</h3>
         <p class="muted">Deploy WOLFBOT to Heroku Cloud</p>
@@ -449,11 +471,11 @@
           <div class="muted">Silent Wolf</div>
         </div>
         <div class="controls">
-          <button onclick="togglePlay('audio1')"><i class="fas fa-play"></i> PLAY</button>
+          <button onclick="togglePlay()"><i class="fas fa-play"></i> PLAY</button>
           <div class="progress"><div class="progress-fill" id="progress1"></div></div>
           <span class="time" id="time1">0:00</span>
         </div>
-        <audio id="audio1" src="https://files.catbox.moe/c2ec5n.mp3"></audio>
+        <audio id="audio1" src="https://files.catbox.moe/c2ec5n.mp3" crossorigin="anonymous"></audio>
       </div>
     </div>
   </main>
@@ -489,6 +511,140 @@
       }
     }
 
+    // Create rhythm wave bars
+    function createWaveBars() {
+      const container = document.getElementById('rhythmWaves');
+      container.innerHTML = '';
+      
+      const barCount = 40;
+      for (let i = 0; i < barCount; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'wave-bar';
+        bar.id = `waveBar${i}`;
+        bar.style.height = `${10 + Math.random() * 30}px`;
+        container.appendChild(bar);
+      }
+    }
+
+    // Audio context for analyzing music
+    let audioContext;
+    let analyser;
+    let dataArray;
+    let animationId;
+    let isAudioPlaying = false;
+
+    function setupAudioAnalysis() {
+      const audio = document.getElementById('audio1');
+      
+      audio.addEventListener('play', () => {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          analyser = audioContext.createAnalyser();
+          const source = audioContext.createMediaElementSource(audio);
+          source.connect(analyser);
+          analyser.connect(audioContext.destination);
+          
+          analyser.fftSize = 256;
+          dataArray = new Uint8Array(analyser.frequencyBinCount);
+        }
+        
+        isAudioPlaying = true;
+        updateWaveBars();
+      });
+      
+      audio.addEventListener('pause', () => {
+        isAudioPlaying = false;
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+        }
+      });
+      
+      audio.addEventListener('ended', () => {
+        isAudioPlaying = false;
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+        }
+        resetWaveBars();
+      });
+    }
+
+    function updateWaveBars() {
+      if (!isAudioPlaying) return;
+      
+      analyser.getByteFrequencyData(dataArray);
+      
+      // Get average frequency and specific frequency ranges
+      let lowFreq = 0, midFreq = 0, highFreq = 0;
+      const lowCount = 10, midCount = 20, highCount = 30;
+      
+      for (let i = 0; i < lowCount; i++) {
+        lowFreq += dataArray[i];
+      }
+      for (let i = lowCount; i < lowCount + midCount; i++) {
+        midFreq += dataArray[i];
+      }
+      for (let i = lowCount + midCount; i < dataArray.length && i < lowCount + midCount + highCount; i++) {
+        highFreq += dataArray[i];
+      }
+      
+      lowFreq /= lowCount;
+      midFreq /= midCount;
+      highFreq /= highCount;
+      
+      // Update wave bars
+      const bars = document.querySelectorAll('.wave-bar');
+      const topWave = document.getElementById('topWave');
+      
+      bars.forEach((bar, index) => {
+        let height;
+        if (index < 13) {
+          // Low frequencies (bass) - bigger movements
+          height = 10 + (lowFreq / 255) * 100;
+        } else if (index < 26) {
+          // Mid frequencies - medium movements
+          height = 10 + (midFreq / 255) * 80;
+        } else {
+          // High frequencies - smaller, faster movements
+          height = 10 + (highFreq / 255) * 60;
+        }
+        
+        // Add some randomness for more organic movement
+        height += Math.sin(Date.now() / 100 + index) * 10;
+        bar.style.height = `${height}px`;
+        
+        // Update opacity based on height
+        const opacity = 0.3 + (height / 110) * 0.7;
+        bar.style.opacity = opacity;
+        
+        // Update color intensity
+        const intensity = Math.min(255, height * 2);
+        bar.style.background = `rgb(0, ${intensity}, 0)`;
+        bar.style.boxShadow = `0 0 ${10 + height/5}px rgba(0, ${intensity}, 0, 0.7)`;
+      });
+      
+      // Update top wave
+      const avgHeight = (lowFreq + midFreq + highFreq) / 3;
+      const topWaveHeight = 2 + (avgHeight / 255) * 6;
+      topWave.style.height = `${topWaveHeight}px`;
+      topWave.style.opacity = 0.3 + (avgHeight / 255) * 0.5;
+      
+      animationId = requestAnimationFrame(updateWaveBars);
+    }
+
+    function resetWaveBars() {
+      const bars = document.querySelectorAll('.wave-bar');
+      bars.forEach(bar => {
+        bar.style.height = '20px';
+        bar.style.opacity = '0.3';
+        bar.style.background = 'var(--primary)';
+        bar.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.5)';
+      });
+      
+      const topWave = document.getElementById('topWave');
+      topWave.style.height = '4px';
+      topWave.style.opacity = '0.3';
+    }
+
     // Smooth animations
     document.addEventListener('DOMContentLoaded', () => {
       document.body.style.opacity = '0';
@@ -497,8 +653,10 @@
         document.body.style.opacity = '1';
       }, 100);
       
-      // Create floating dots
+      // Create floating dots and wave bars
       createFloatingDots();
+      createWaveBars();
+      setupAudioAnalysis();
     });
 
     // Update clock in title
@@ -512,74 +670,47 @@
       setInterval(update, 1000);
     }
 
-    // Battery status
-    const updateBattery = async () => {
-      if (navigator.getBattery) {
-        try {
-          const battery = await navigator.getBattery();
-          const setBattery = () => {
-            const batteryPercent = Math.round(battery.level * 100);
-            const batteryElement = document.getElementById('battery');
-            batteryElement.innerText = `${batteryPercent}%`;
-
-            // Add battery icon based on level
-            let batteryIcon = 'fa-bolt';
-            if (batteryPercent <= 20) batteryIcon = 'fa-battery-quarter';
-            else if (batteryPercent <= 50) batteryIcon = 'fa-battery-half';
-            else if (batteryPercent <= 80) batteryIcon = 'fa-battery-three-quarters';
-            else if (batteryPercent <= 100) batteryIcon = 'fa-battery-full';
-
-            batteryElement.previousElementSibling.className = `fas ${batteryIcon}`;
-          };
-
-          battery.addEventListener('levelchange', setBattery);
-          battery.addEventListener('chargingchange', setBattery);
-          setBattery();
-        } catch (error) {
-          console.error('Battery API error:', error);
-        }
-      }
-    }
-
     // Music player controls
-    const togglePlay = (id) => {
-      const audio = document.getElementById(id);
+    let isPlaying = false;
+    let audio = document.getElementById('audio1');
+    
+    function togglePlay() {
       const progress = document.getElementById('progress1');
       const time = document.getElementById('time1');
-      const button = document.querySelector('button[onclick*="'+id+'"]');
-
+      const button = document.querySelector('button[onclick*="togglePlay"]');
+      
       if (audio.paused) {
-        audio.play();
-        button.innerHTML = '<i class="fas fa-pause"></i> PAUSE';
-
-        audio.ontimeupdate = () => {
+        audio.play().then(() => {
+          isPlaying = true;
+          button.innerHTML = '<i class="fas fa-pause"></i> PAUSE';
+        }).catch(error => {
+          console.error("Audio playback failed:", error);
+        });
+        
+        // Update progress bar
+        audio.addEventListener('timeupdate', updateProgress);
+        
+        function updateProgress() {
           const percent = (audio.currentTime / audio.duration) * 100;
           progress.style.width = percent + '%';
-
+          
           const minutes = Math.floor(audio.currentTime / 60);
           const seconds = Math.floor(audio.currentTime % 60);
           time.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
-        };
-
+        }
+        
+        // Handle audio end
         audio.onended = () => {
           progress.style.width = '0%';
           time.textContent = '0:00';
           button.innerHTML = '<i class="fas fa-play"></i> PLAY';
+          isPlaying = false;
         };
+        
       } else {
         audio.pause();
+        isPlaying = false;
         button.innerHTML = '<i class="fas fa-play"></i> PLAY';
-      }
-    }
-
-    // IP address fetch
-    const fetchIP = async () => {
-      try {
-        const res = await fetch('https://api.ipify.org?format=json');
-        const data = await res.json();
-        document.getElementById('ip').textContent = data.ip;
-      } catch {
-        document.getElementById('ip').textContent = 'Offline';
       }
     }
 
@@ -599,9 +730,10 @@
     // Initialize everything
     const init = () => {
       updateTime();
-      updateBattery();
-      fetchIP();
       setupToolHover();
+      
+      // Preload audio
+      audio.load();
     };
 
     window.addEventListener('load', init);

@@ -40,6 +40,45 @@
       background: var(--bg);
     }
 
+    /* Rhythm waves container */
+    .rhythm-waves {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      padding: 0 15px;
+      height: 120px;
+      bottom: 0;
+      top: auto;
+    }
+
+    .wave-bar {
+      width: 10px;
+      background: var(--primary);
+      border-radius: 5px 5px 0 0;
+      opacity: 0.7;
+      transition: height 0.1s ease;
+      box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+    }
+
+    /* Top wave line */
+    .top-wave {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary);
+      opacity: 0.4;
+      z-index: 0;
+    }
+
     /* Animated green dots background */
     .bg-dots {
       position: fixed;
@@ -252,58 +291,61 @@
       transform: scale(1.05);
     }
 
+    /* Smaller music player */
     .music-player {
       width: 100%;
-      max-width: 500px;
+      max-width: 400px; /* Smaller width */
       background: rgba(0, 255, 0, 0.05);
       backdrop-filter: blur(var(--blur));
       border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      padding: 1.2rem; /* Reduced padding */
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(0, 255, 0, 0.1);
       z-index: 90;
       text-align: center;
-      margin-top: 2rem;
+      margin-top: 1.5rem; /* Less margin */
       transition: var(--transition);
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .music-player:hover {
       border-color: rgba(0, 255, 0, 0.3);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), var(--glow);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), var(--glow);
     }
 
     .music-player h3 {
       color: var(--highlight);
-      margin-bottom: 0.5rem;
-      font-size: 1.2rem;
+      margin-bottom: 0.4rem;
+      font-size: 1rem; /* Smaller font */
       font-family: 'Orbitron', sans-serif;
-      text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+      text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
     }
 
     .music-title {
       font-weight: bold;
-      font-size: 1.1rem;
-      margin-bottom: 0.3rem;
+      font-size: 0.95rem; /* Smaller font */
+      margin-bottom: 0.2rem;
     }
 
     .music-subtitle {
       color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
+      font-size: 0.8rem; /* Smaller font */
+      margin-bottom: 0.8rem;
     }
 
     .play-btn {
       background: rgba(0, 255, 0, 0.1);
       border: 1px solid var(--highlight);
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 40px; /* Smaller button */
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
       transition: var(--transition);
     }
 
@@ -315,12 +357,12 @@
 
     .play-btn i {
       color: var(--highlight);
-      font-size: 1.5rem;
+      font-size: 1.2rem; /* Smaller icon */
     }
 
     .time-display {
-      margin-top: 1rem;
-      font-size: 0.9rem;
+      margin-top: 0.8rem;
+      font-size: 0.8rem;
       color: var(--muted);
     }
 
@@ -347,11 +389,27 @@
 
       .music-player {
         padding: 1rem;
+        max-width: 350px;
+      }
+      
+      .rhythm-waves {
+        padding: 0 10px;
+        height: 100px;
+      }
+      
+      .wave-bar {
+        width: 7px;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Rhythm waves at bottom -->
+  <div class="rhythm-waves" id="rhythmWaves"></div>
+  
+  <!-- Top wave line -->
+  <div class="top-wave" id="topWave"></div>
+  
   <!-- Animated green dots background -->
   <div class="bg-dots" id="bgDots"></div>
 
@@ -368,6 +426,7 @@
   </header>
 
   <div class="main-content">
+    <!-- Smaller Music Player -->
     <div class="music-player">
       <h3>PLAY NOW</h3>
       <div class="music-title">Home</div>
@@ -377,8 +436,9 @@
       </button>
       <div class="time-display" id="time1">0:00</div>
       <div class="music-subtitle">Wolf Spirits</div>
-      <audio id="audio1" src="https://files.catbox.moe/c2ec5n.mp3" loop></audio>
+      <audio id="audio1" src="https://files.catbox.moe/c2ec5n.mp3" crossorigin="anonymous" loop></audio>
     </div>
+    
     <div class="box">
       <h2>PAIRING CODE</h2>
       <h5>WOLFBOT</h5>
@@ -395,8 +455,6 @@
 
       <button id="copy-code" onclick="copyCode()">COPY YOUR CODE</button>
     </div>
-
-    
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
@@ -432,6 +490,120 @@
       }
     }
 
+    // Create rhythm wave bars
+    function createWaveBars() {
+      const container = document.getElementById('rhythmWaves');
+      container.innerHTML = '';
+      
+      const barCount = 30; // Fewer bars for smaller screen
+      for (let i = 0; i < barCount; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'wave-bar';
+        bar.id = `waveBar${i}`;
+        bar.style.height = `${8 + Math.random() * 25}px`;
+        container.appendChild(bar);
+      }
+    }
+
+    // Audio context for analyzing music
+    let audioContext;
+    let analyser;
+    let dataArray;
+    let animationId;
+    let isAudioPlaying = false;
+
+    function setupAudioAnalysis() {
+      const audio = document.getElementById('audio1');
+      
+      audio.addEventListener('play', () => {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          analyser = audioContext.createAnalyser();
+          const source = audioContext.createMediaElementSource(audio);
+          source.connect(analyser);
+          analyser.connect(audioContext.destination);
+          
+          analyser.fftSize = 128; // Smaller fft size for performance
+          dataArray = new Uint8Array(analyser.frequencyBinCount);
+        }
+        
+        isAudioPlaying = true;
+        updateWaveBars();
+      });
+      
+      audio.addEventListener('pause', () => {
+        isAudioPlaying = false;
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+        }
+        resetWaveBars();
+      });
+      
+      audio.addEventListener('ended', () => {
+        isAudioPlaying = false;
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+        }
+        resetWaveBars();
+      });
+    }
+
+    function updateWaveBars() {
+      if (!isAudioPlaying) return;
+      
+      analyser.getByteFrequencyData(dataArray);
+      
+      // Get average frequency
+      let total = 0;
+      for (let i = 0; i < dataArray.length; i++) {
+        total += dataArray[i];
+      }
+      const avgFreq = total / dataArray.length;
+      
+      // Update wave bars
+      const bars = document.querySelectorAll('.wave-bar');
+      const topWave = document.getElementById('topWave');
+      
+      bars.forEach((bar, index) => {
+        // Create wavy pattern with sine wave
+        const wavePattern = Math.sin(Date.now() / 200 + index * 0.3);
+        let height = 15 + (avgFreq / 255) * 60 + wavePattern * 15;
+        
+        // Clamp height
+        height = Math.max(10, Math.min(80, height));
+        
+        bar.style.height = `${height}px`;
+        
+        // Update opacity and color based on frequency
+        const intensity = Math.min(255, height * 3);
+        bar.style.opacity = 0.4 + (avgFreq / 255) * 0.6;
+        bar.style.background = `rgb(0, ${intensity}, 0)`;
+        bar.style.boxShadow = `0 0 ${5 + height/10}px rgba(0, ${intensity}, 0, 0.8)`;
+      });
+      
+      // Update top wave
+      const topWaveHeight = 2 + (avgFreq / 255) * 5;
+      topWave.style.height = `${topWaveHeight}px`;
+      topWave.style.opacity = 0.3 + (avgFreq / 255) * 0.4;
+      
+      animationId = requestAnimationFrame(updateWaveBars);
+    }
+
+    function resetWaveBars() {
+      const bars = document.querySelectorAll('.wave-bar');
+      bars.forEach(bar => {
+        bar.style.height = '20px';
+        bar.style.opacity = '0.4';
+        bar.style.background = 'var(--primary)';
+        bar.style.boxShadow = '0 0 8px rgba(0, 255, 0, 0.5)';
+      });
+      
+      const topWave = document.getElementById('topWave');
+      topWave.style.height = '3px';
+      topWave.style.opacity = '0.4';
+    }
+
+    // Pairing functionality
     const pairResult = document.getElementById("pair-result");
     const submitBtn = document.getElementById("submit");
     const numberInput = document.getElementById("number");
@@ -555,6 +727,8 @@
       copyCodeBtn.style.display = "none";
       updateBattery();
       createFloatingDots();
+      createWaveBars();
+      setupAudioAnalysis();
       
       // Update battery every minute
       setInterval(updateBattery, 60000);
